@@ -1,6 +1,15 @@
-set guioptions-=T " hide toolbar
-set lines=55 columns=100
+colorscheme zenburn
 
-colorscheme railscasts
+" default except no scrollbars (-rL)
+" also no toolbar (-T)
+set go=agimte
 
-set guifont=DejaVu\ Sans\ Mono:h13
+"runtime kent-gui-improve.vim
+
+" Set number of lines and columns to maximum
+set lines=999
+set columns=999
+
+" Set font
+set guifont=Bitstream\ Vera\ Sans\ Mono\ 9
+
