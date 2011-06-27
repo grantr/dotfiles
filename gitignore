@@ -1,4 +1,9 @@
-.DS_Store
-.svn
-*~
-.*.swp
+*.log 
+*.html-gzip-* 
+.DS_Store 
+*.swp
+*.swo
+*.swn
+Session.vim 
+tags 
+uuid.state
