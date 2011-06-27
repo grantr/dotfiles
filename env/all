@@ -1,0 +1,5 @@
+for f in $HOME/.env/*; do
+    if [ $f != "all" ]; then
+        . $f
+    fi
+done
