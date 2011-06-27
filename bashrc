@@ -1,7 +1,6 @@
 . ~/.bash/aliases
 . ~/.bash/completions
 . ~/.bash/windowtitle
-. ~/.bash/keychain
 . ~/.bash/config
 . ~/.bash/prompt
 . ~/.env/all
