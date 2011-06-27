@@ -1,12 +1,12 @@
-source ~/.bash/aliases
-source ~/.bash/completions
-source ~/.bash/windowtitle
-source ~/.bash/keychain
-source ~/.bash/paths
-source ~/.bash/config
-source ~/.bash/prompt
+. ~/.bash/aliases
+. ~/.bash/completions
+. ~/.bash/windowtitle
+. ~/.bash/keychain
+. ~/.bash/config
+. ~/.bash/prompt
+. ~/.env/all
 
 # use .localrc for settings specific to one system
 if [ -f ~/.localrc ]; then
-  source ~/.localrc
+  . ~/.localrc
 fi

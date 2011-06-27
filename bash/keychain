@@ -1,3 +1,0 @@
-keychain -Q ~/.ssh/id_rsa
-. ~/.keychain/$HOSTNAME-sh
-. ~/.keychain/$HOSTNAME-sh-gpg
