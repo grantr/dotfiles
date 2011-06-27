@@ -1,20 +1,28 @@
 [user]
 	name = <%= print("Your Name: "); STDOUT.flush; STDIN.gets.chomp %>
 	email = <%= print("Your Email: "); STDOUT.flush; STDIN.gets.chomp %>
+[github]
+	user = <%= print("GitHub Username: "); STDOUT.flush; STDIN.gets.chomp %>
+	token = <%= print("GitHub API Token: "); STDOUT.flush; STDIN.gets.chomp %>
 [alias]
 	co = checkout
 [color]
 	diff = auto
 	status = auto
-	branch = auto
+  branch = auto
+  ui = auto
+  interactive = auto
 [core]
-	excludesfile = <%= ENV['HOME'] %>/.gitignore
-	editor = mate_wait
-	autocrlf = input
+  excludesfile = <%= ENV['HOME'] %>/.gitignore
+[merge]
+  conflictstyle = diff3
 [apply]
-	whitespace = nowarn
+  whitespace = nowarn
+[branch]
+  autosetupmerge = true
+[diff "ruby"]
+	funcname = ^ *\\(\\(class\\|module\\|def\\) .*\\)
 [format]
-	pretty = %C(yellow)%h%Creset %s %C(red)(%an, %cr)%Creset
-[github]
-	user = <%= print("GitHub Username: "); STDOUT.flush; STDIN.gets.chomp %>
-	token = <%= print("GitHub API Token: "); STDOUT.flush; STDIN.gets.chomp %>
+  pretty = %C(yellow)%h%Creset %s %C(red)(%an, %cr)%Creset
+[rerere]
+  enabled = 1
