@@ -7,131 +7,235 @@ require("beautiful")
 -- Notification library
 require("naughty")
 
+-- widget library
+require("vicious")
+
+-- Calendar
+require("cal")
+
 -- {{{ Variable definitions
--- Themes define colours, icons, and wallpapers
-beautiful.init("/usr/share/awesome/themes/zenburn/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "urxvt"
 editor = os.getenv("EDITOR") or "nano"
 editor_cmd = terminal .. " -e " .. editor
 
--- Default modkey.
--- Usually, Mod4 is the key with a logo between Control and Alt.
--- If you do not like this or do not have such a key,
--- I suggest you to remap Mod4 to another key using xmodmap or other tools.
--- However, you can use another modifier like Mod1, but it may interact with others.
-modkey = "Mod4"
+local altkey = "Mod1"
+local modkey = "Mod4"
 
--- Delightful widgets
-require('delightful.widgets.battery')
-require('delightful.widgets.cpu')
-require('delightful.widgets.datetime')
---require('delightful.widgets.imap')
-require('delightful.widgets.memory')
---require('delightful.widgets.network')
---require('delightful.widgets.pulseaudio')
---require('delightful.widgets..weather')
+local home   = os.getenv("HOME")
+local exec   = awful.util.spawn
+local sexec  = awful.util.spawn_with_shell
+local scount = screen.count()
 
--- Which widgets to install?
--- This is the order the widgets appear in the wibox.
-install_delightful = {
-    --delightful.widgets.network,
-    delightful.widgets.cpu,
-    delightful.widgets.memory,
-    --delightful.widgets.weather,
-    --delightful.widgets.imap,
-    delightful.widgets.battery,
-    --delightful.widgets.pulseaudio,
-    delightful.widgets.datetime
-}
+-- Themes define colours, icons, and wallpapers
+beautiful.init(home .. "/.config/awesome/zenburn.lua")
 
--- Widget configuration
-delightful_config = {
-    [delightful.widgets.battery] = {
-        -- TODO modify this to receive acpi events
-        battery = 'BAT0'
-    },
-    --[delightful.widgets.pulseaudio] = {
-        --mixer_command = 'gnome-volume-control'
-    --}
-}
-
--- Prepare the container that is used when constructing the wibox
-local delightful_container = { widgets = {}, icons = {} }
-if install_delightful then
-    for _, widget in pairs(awful.util.table.reverse(install_delightful)) do
-        local config = delightful_config and delightful_config[widget]
-        local widgets, icons = widget:load(config)
-        if widgets then
-            if not icons then
-                icons = {}
-            end
-            table.insert(delightful_container.widgets, awful.util.table.reverse(widgets))
-            table.insert(delightful_container.icons,   awful.util.table.reverse(icons))
-        end
-    end
-end
+-- force red background for urgent tags
+theme.bg_urgent     = "#ff0000"
+theme.fg_urgent     = "#ffffff"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 layouts =
 {
-    awful.layout.suit.floating,
-    awful.layout.suit.tile,
-    awful.layout.suit.tile.left,
-    awful.layout.suit.tile.bottom,
-    awful.layout.suit.tile.top,
-    awful.layout.suit.fair,
-    awful.layout.suit.fair.horizontal,
-    awful.layout.suit.spiral,
-    awful.layout.suit.spiral.dwindle,
-    awful.layout.suit.max,
-    awful.layout.suit.max.fullscreen,
-    awful.layout.suit.magnifier
+    awful.layout.suit.tile,        -- 1
+    awful.layout.suit.tile.bottom, -- 2   
+    awful.layout.suit.fair,        -- 3
+    awful.layout.suit.max,         -- 4
+    awful.layout.suit.magnifier,   -- 5
+    awful.layout.suit.floating     -- 6
 }
 -- }}}
 
 -- {{{ Tags
+
+tags = {
+    names  = { "dev", "work", "sys", "mail", "web", "im", 7, 8, 9 }
+}
 -- Define a tag table which hold all screen tags.
-tags = {}
-for s = 1, screen.count() do
+for s = 1, scount do
     -- Each screen has its own tag table.
-    tags[s] = awful.tag({ 1, 2, 3, 4, 5, 6, 7, 8, 9 }, s, layouts[1])
+    --
+    tags[s] = awful.tag(tags.names, s, layouts[1])
 end
 -- }}}
 
+-- {{{ Wibox
+
+-- {{{ Widgets configuration
+--
+-- {{{ Reusable separator
+separator = widget({ type = "imagebox" })
+separator.image = image(beautiful.widget_sep)
+-- }}}
+
+-- {{{ CPU usage and temperature
+cpuicon = widget({ type = "imagebox" })
+cpuicon.image = image(beautiful.widget_cpu)
+-- Initialize widgets
+cpugraph  = awful.widget.graph()
+tzswidget = widget({ type = "textbox" })
+-- Graph properties
+cpugraph:set_width(60):set_height(16)
+cpugraph:set_background_color(beautiful.fg_off_widget)
+cpugraph:set_gradient_angle(0):set_gradient_colors({
+   beautiful.fg_end_widget, beautiful.fg_center_widget, beautiful.fg_widget
+}) -- Register widgets
+vicious.register(cpugraph,  vicious.widgets.cpu, "$1")
+--vicious.register(tzswidget, vicious.widgets.thermal, " $1C", 19, "thermal_zone0")
+-- }}}
+
+-- {{{ Memory usage
+memicon = widget({ type = "imagebox" })
+memicon.image = image(beautiful.widget_mem)
+-- Initialize widget
+membar = awful.widget.progressbar()
+-- Pogressbar properties
+membar:set_vertical(true):set_ticks(true)
+membar:set_height(16):set_width(12):set_ticks_size(2)
+membar:set_background_color(beautiful.fg_off_widget)
+membar:set_gradient_colors({ beautiful.fg_widget,
+   beautiful.fg_center_widget, beautiful.fg_end_widget
+}) -- Register widget
+vicious.register(membar, vicious.widgets.mem, "$1", 13)
+-- }}}
+
+-- {{{ File system usage
+fsicon = widget({ type = "imagebox" })
+fsicon.image = image(beautiful.widget_fs)
+-- Initialize widgets
+fs = {
+  root = awful.widget.progressbar(),
+  home = awful.widget.progressbar(),
+  usr  = awful.widget.progressbar(),
+  var  = awful.widget.progressbar(),
+  opt  = awful.widget.progressbar(),
+  tmp  = awful.widget.progressbar()
+}
+-- Progressbar properties
+for path, w in pairs(fs) do
+  w:set_vertical(true):set_ticks(true)
+  w:set_height(16):set_width(12):set_ticks_size(2)
+  w:set_border_color(beautiful.border_widget)
+  w:set_background_color(beautiful.fg_off_widget)
+  w:set_gradient_colors({ beautiful.fg_widget,
+     beautiful.fg_center_widget, beautiful.fg_end_widget
+  }) 
+  -- Register buttons
+  --w.widget:buttons(awful.util.table.join(
+  --  awful.button({ }, 1, function () exec("rox", false) end)
+  --))
+  -- Add tooltip
+  --tooltip = awful.tooltip({})
+  --tooltip:add_to_object(w)
+ -- w:add_signal("mouse::enter", function()
+--    tooltip:set_text("/" .. path)
+  --end)
+end -- Enable caching
+vicious.cache(vicious.widgets.fs)
+-- Register widgets
+vicious.register(fs.root, vicious.widgets.fs, "${/ used_p}", 599)
+vicious.register(fs.home, vicious.widgets.fs, "${/home used_p}", 599)
+vicious.register(fs.usr,  vicious.widgets.fs, "${/usr used_p}", 599)
+vicious.register(fs.var,  vicious.widgets.fs, "${/var used_p}", 599)
+vicious.register(fs.opt,  vicious.widgets.fs, "${/opt used_p}", 599)
+vicious.register(fs.tmp,  vicious.widgets.fs, "${/tmp used_p}", 599)
+-- }}}
+
+-- {{{ Network usage
+dnicon = widget({ type = "imagebox" })
+upicon = widget({ type = "imagebox" })
+dnicon.image = image(beautiful.widget_net)
+upicon.image = image(beautiful.widget_netup)
+-- Initialize widget
+netwidget = widget({ type = "textbox" })
+-- Register widget
+vicious.register(netwidget, vicious.widgets.net, '<span color="'
+  .. beautiful.fg_netdn_widget ..'">${eth0 down_kb}</span> <span color="'
+  .. beautiful.fg_netup_widget ..'">${eth0 up_kb}</span>', 3)
+-- }}}
+
+-- {{{ Mail subject
+mailicon = widget({ type = "imagebox" })
+mailicon.image = image(beautiful.widget_mail)
+-- Initialize widget
+mailwidget = widget({ type = "textbox" })
+-- Register widget
+--vicious.register(mailwidget, vicious.widgets.mbox, "$1", 181, {home .. "/mail/Inbox", 15})
+-- Register buttons
+--mailwidget:buttons(awful.util.table.join(
+--  awful.button({ }, 1, function () exec("urxvt -T Alpine -e alpine.exp") end)
+--))
+-- }}}
+
+-- {{{ Volume level
+volicon = widget({ type = "imagebox" })
+volicon.image = image(beautiful.widget_vol)
+-- Initialize widgets
+volbar    = awful.widget.progressbar()
+volwidget = widget({ type = "textbox" })
+-- Progressbar properties
+volbar:set_vertical(true):set_ticks(true)
+volbar:set_height(16):set_width(12):set_ticks_size(2)
+volbar:set_background_color(beautiful.fg_off_widget)
+volbar:set_gradient_colors({ beautiful.fg_widget,
+   beautiful.fg_center_widget, beautiful.fg_end_widget
+}) -- Enable caching
+vicious.cache(vicious.widgets.volume)
+-- Register widgets
+vicious.register(volbar,    vicious.widgets.volume,  "$1",  2, "PCM")
+vicious.register(volwidget, vicious.widgets.volume, " $1%", 2, "PCM")
+-- Register buttons
+volbar.widget:buttons(awful.util.table.join(
+   awful.button({ }, 1, function () exec("kmix") end),
+   awful.button({ }, 4, function () exec("amixer -q set PCM 2dB+", false) end),
+   awful.button({ }, 5, function () exec("amixer -q set PCM 2dB-", false) end)
+)) -- Register assigned buttons
+volwidget:buttons(volbar.widget:buttons())
+-- }}}
+
+-- {{{ Date and time
+dateicon = widget({ type = "imagebox" })
+dateicon.image = image(beautiful.widget_date)
+-- Initialize widget
+datewidget = widget({ type = "textbox" })
+-- Register widget
+vicious.register(datewidget, vicious.widgets.date, "%b %d, %R", 61)
+-- Add calendar
+cal.register(datewidget, "<span color='#CC9393'><b>%s</b></span>")
+-- }}}
+
+-- {{{ System tray
+systray = widget({ type = "systray" })
+-- }}} 
+
 -- {{{ Menu
 -- Create a laucher widget and a main menu
-myawesomemenu = {
+awesomemenu = {
    { "manual", terminal .. " -e man awesome" },
    { "edit config", editor_cmd .. " " .. awful.util.getdir("config") .. "/rc.lua" },
    { "restart", awesome.restart },
    { "quit", awesome.quit }
 }
 
-mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
+mainmenu = awful.menu({ items = { { "awesome", awesomemenu, beautiful.awesome_icon },
                                     { "open terminal", terminal }
                                   }
                         })
 
-mylauncher = awful.widget.launcher({ image = image(beautiful.awesome_icon),
-                                     menu = mymainmenu })
+launcher = awful.widget.launcher({ image = image(beautiful.awesome_icon),
+                                     menu = mainmenu })
 -- }}}
 
--- {{{ Wibox
--- Create a textclock widget
-mytextclock = awful.widget.textclock({ align = "right" })
-
--- Create a systray
-mysystray = widget({ type = "systray" })
+-- }}} Widget configuration
 
 -- Create a wibox for each screen and add it
-mywibox = {}
-mytaskbox = {}
-mypromptbox = {}
-mylayoutbox = {}
-mytaglist = {}
-mytaglist.buttons = awful.util.table.join(
+wibox = {}
+taskbox = {}
+promptbox = {}
+layoutbox = {}
+taglist = {}
+taglist.buttons = awful.util.table.join(
                     awful.button({ }, 1, awful.tag.viewonly),
                     awful.button({ modkey }, 1, awful.client.movetotag),
                     awful.button({ }, 3, awful.tag.viewtoggle),
@@ -139,8 +243,8 @@ mytaglist.buttons = awful.util.table.join(
                     awful.button({ }, 4, awful.tag.viewnext),
                     awful.button({ }, 5, awful.tag.viewprev)
                     )
-mytasklist = {}
-mytasklist.buttons = awful.util.table.join(
+tasklist = {}
+tasklist.buttons = awful.util.table.join(
                      awful.button({ }, 1, function (c)
                                               if not c:isvisible() then
                                                   awful.tag.viewonly(c:tags()[1])
@@ -165,80 +269,63 @@ mytasklist.buttons = awful.util.table.join(
                                               if client.focus then client.focus:raise() end
                                           end))
 
-for s = 1, screen.count() do
+for s = 1, scount do
     -- Create a promptbox for each screen
-    mypromptbox[s] = awful.widget.prompt({ layout = awful.widget.layout.horizontal.leftright })
+    promptbox[s] = awful.widget.prompt({ layout = awful.widget.layout.horizontal.leftright })
     -- Create an imagebox widget which will contains an icon indicating which layout we're using.
     -- We need one layoutbox per screen.
-    mylayoutbox[s] = awful.widget.layoutbox(s)
-    mylayoutbox[s]:buttons(awful.util.table.join(
+    layoutbox[s] = awful.widget.layoutbox(s)
+    layoutbox[s]:buttons(awful.util.table.join(
                            awful.button({ }, 1, function () awful.layout.inc(layouts, 1) end),
                            awful.button({ }, 3, function () awful.layout.inc(layouts, -1) end),
                            awful.button({ }, 4, function () awful.layout.inc(layouts, 1) end),
                            awful.button({ }, 5, function () awful.layout.inc(layouts, -1) end)))
     -- Create a taglist widget
-    mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.label.all, mytaglist.buttons)
+    taglist[s] = awful.widget.taglist(s, awful.widget.taglist.label.all, taglist.buttons)
 
     -- Create a tasklist widget
-    mytasklist[s] = awful.widget.tasklist(function(c)
+    tasklist[s] = awful.widget.tasklist(function(c)
                                               return awful.widget.tasklist.label.currenttags(c, s)
-                                          end, mytasklist.buttons)
+                                          end, tasklist.buttons)
 
-    -- Create the wibox
-    mywibox[s] = awful.wibox({ position = "bottom", screen = s })
-    -- Add widgets to the wibox - order matters
-    --mywibox[s].widgets = {
-        --{
-            --mylauncher,
-            --mytaglist[s],
-            --mypromptbox[s],
-            --layout = awful.widget.layout.horizontal.leftright
-        --},
-        --mylayoutbox[s],
-        --mytextclock,
-        --s == 1 and mysystray or nil,
-        ---- mytasklist[s],
-        --layout = awful.widget.layout.horizontal.rightleft
-    --}
-
-    mytaskbox[s] = awful.wibox({ position = "top", screen = s})
-    mytaskbox[s].widgets = {
-        mytasklist[s],
-        layout = awful.widget.layout.horizontal.leftright
-    }
-
-    -- Delightful
-    local widgets_front = {
+    -- top wibox
+    taskbox[s] = awful.wibox({ position = "top", screen = s})
+    taskbox[s].widgets = {
         {
-            mylauncher,
-            mytaglist[s],
-            mypromptbox[s],
+            launcher,
+            taglist[s],
+            promptbox[s],
             layout = awful.widget.layout.horizontal.leftright
         },
-        mylayoutbox[s],
-    }
-    local widgets_middle = {}
-    for delightful_container_index, delightful_container_data in pairs(delightful_container.widgets) do
-        for widget_index, widget_data in pairs(delightful_container_data) do
-            table.insert(widgets_middle, widget_data)
-            if delightful_container.icons[delightful_container_index] and delightful_container.icons[delightful_container_index][widget_index] then
-                table.insert(widgets_middle, delightful_container.icons[delightful_container_index][widget_index])
-            end
-        end
-    end
-    local widgets_end = {
-        s == 1 and mysystray or nil,
+        layoutbox[s],
+        s == 1 and systray or nil,
+        tasklist[s],
         layout = awful.widget.layout.horizontal.rightleft
     }
-    
-    mywibox[s].widgets = awful.util.table.join(widgets_front, widgets_middle, widgets_end)
 
+    -- bottom wibox
+    wibox[s] = awful.wibox({ screen = s,
+        position = "bottom",
+    })
+
+    wibox[s].widgets = {
+        separator, datewidget, dateicon,
+        separator, volwidget,  volbar.widget, volicon,
+--        separator, mailwidget, mailicon,
+        separator, upicon,     netwidget, dnicon,
+        separator, fs.tmp.widget, fs.opt.widget, fs.var.widget, fs.usr.widget, fs.home.widget, fs.root.widget, fsicon,
+        separator, membar.widget, memicon,
+--        separator, tzswidget, cpugraph.widget, cpuicon,
+        separator, cpugraph.widget, cpuicon,
+        separator,
+        layout = awful.widget.layout.horizontal.rightleft
+    }
 end
 -- }}}
 
 -- {{{ Mouse bindings
 root.buttons(awful.util.table.join(
-    awful.button({ }, 3, function () mymainmenu:toggle() end),
+    awful.button({ }, 3, function () mainmenu:toggle() end),
     awful.button({ }, 4, awful.tag.viewnext),
     awful.button({ }, 5, awful.tag.viewprev)
 ))
@@ -246,6 +333,10 @@ root.buttons(awful.util.table.join(
 
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
+    -- {{{ Applications
+    awful.key({ modkey,           }, "w", function () exec("chromium") end),
+    -- }}}
+
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ),
     awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ),
     awful.key({ modkey,           }, "Escape", awful.tag.history.restore),
@@ -260,7 +351,7 @@ globalkeys = awful.util.table.join(
             awful.client.focus.byidx(-1)
             if client.focus then client.focus:raise() end
         end),
-    awful.key({ modkey,           }, "w", function () mymainmenu:show({keygrabber=true}) end),
+--    awful.key({ modkey,           }, "w", function () mainmenu:show({keygrabber=true}) end),
 
     -- Layout manipulation
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end),
@@ -291,12 +382,12 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end),
 
     -- Prompt
-    awful.key({ modkey },            "r",     function () mypromptbox[mouse.screen]:run() end),
+    awful.key({ modkey },            "r",     function () promptbox[mouse.screen]:run() end),
 
     awful.key({ modkey }, "x",
               function ()
                   awful.prompt.run({ prompt = "Run Lua code: " },
-                  mypromptbox[mouse.screen].widget,
+                  promptbox[mouse.screen].widget,
                   awful.util.eval, nil,
                   awful.util.getdir("cache") .. "/history_eval")
               end)
@@ -320,7 +411,7 @@ clientkeys = awful.util.table.join(
 
 -- Compute the maximum number of digit we need, limited to 9
 keynumber = 0
-for s = 1, screen.count() do
+for s = 1, scount do
    keynumber = math.min(9, math.max(#tags[s], keynumber));
 end
 
@@ -380,6 +471,8 @@ awful.rules.rules = {
     { rule = { class = "pinentry" },
       properties = { floating = true } },
     { rule = { class = "gimp" },
+      properties = { floating = true } },
+    { rule = { class = "feh" },
       properties = { floating = true } },
     -- Set Firefox to always map on tags number 2 of screen 1.
     -- { rule = { class = "Firefox" },
