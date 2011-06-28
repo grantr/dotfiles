@@ -5,8 +5,7 @@ behave xterm
 if has("gui_running")
   colorscheme zenburn
 else
-    " find a colorscheme that works for terminals
-  colorscheme twilight
+  colorscheme default
 end
 
 " vim assumes you want to print cjk when encoding is utf-8
