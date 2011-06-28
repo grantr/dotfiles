@@ -16,7 +16,7 @@ task :install do
   # .config dirs
   system %Q{mkdir -p "$HOME/.config"}
   Dir['config/*'].each do |file|
-    path = ".config/#{file}"
+    path = ".config/#{File.basename(file)}"
     process_file(file, path, replace_all)
   end
 end
@@ -42,7 +42,7 @@ def process_file(file, path, replace_all=false)
       end
     end
   else
-    link_file(path)
+    link_file(path, file)
   end
 end
 
@@ -51,7 +51,7 @@ def replace_file(path)
   link_file(path)
 end
 
-def link_file(path)
+def link_file(path, file=nil)
   if path =~ /.erb$/
     puts "generating ~/#{path.sub(/.erb$/, '')}"
     File.open(File.join(ENV['HOME'], path.sub('.erb', '')), 'w') do |new_file|
@@ -59,6 +59,6 @@ def link_file(path)
     end
   else
     puts "linking ~/#{path}"
-    system %Q{ln -s "$PWD/#{path}" "$HOME/#{path}"}
+    system %Q{ln -s "$PWD/#{file || path}" "$HOME/#{path}"}
   end
 end
