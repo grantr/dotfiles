@@ -74,7 +74,6 @@ cpuicon = widget({ type = "imagebox" })
 cpuicon.image = image(beautiful.widget_cpu)
 -- Initialize widgets
 cpugraph  = awful.widget.graph()
-tzswidget = widget({ type = "textbox" })
 -- Graph properties
 cpugraph:set_width(60):set_height(16)
 cpugraph:set_background_color(beautiful.fg_off_widget)
@@ -84,6 +83,12 @@ cpugraph:set_gradient_angle(0):set_gradient_colors({
 vicious.register(cpugraph,  vicious.widgets.cpu, "$1")
 --vicious.register(tzswidget, vicious.widgets.thermal, " $1C", 19, "thermal_zone0")
 -- }}}
+
+-- {{{ Load average
+loadwidget = widget({ type = "textbox" })
+vicious.register(loadwidget, vicious.widgets.uptime, "$4 $5 $6", 3)
+-- }}}
+
 
 -- {{{ Memory usage
 memicon = widget({ type = "imagebox" })
@@ -121,10 +126,6 @@ for path, w in pairs(fs) do
   w:set_gradient_colors({ beautiful.fg_widget,
      beautiful.fg_center_widget, beautiful.fg_end_widget
   }) 
-  -- Register buttons
-  --w.widget:buttons(awful.util.table.join(
-  --  awful.button({ }, 1, function () exec("rox", false) end)
-  --))
   -- Add tooltip
   --tooltip = awful.tooltip({})
   --tooltip:add_to_object(w)
@@ -142,6 +143,11 @@ vicious.register(fs.opt,  vicious.widgets.fs, "${/opt used_p}", 599)
 vicious.register(fs.tmp,  vicious.widgets.fs, "${/tmp used_p}", 599)
 -- }}}
 
+-- {{{ Disk I/O
+diowidget = widget({ type = "textbox" })
+vicious.register(diowidget, vicious.widgets.dio, "R:${sda read_mb} W:${sda write_mb}", 3)
+-- }}}
+
 -- {{{ Network usage
 dnicon = widget({ type = "imagebox" })
 upicon = widget({ type = "imagebox" })
@@ -152,16 +158,16 @@ netwidget = widget({ type = "textbox" })
 -- Register widget
 vicious.register(netwidget, vicious.widgets.net, '<span color="'
   .. beautiful.fg_netdn_widget ..'">${eth0 down_kb}</span> <span color="'
-  .. beautiful.fg_netup_widget ..'">${eth0 up_kb}</span>', 3)
+  .. beautiful.fg_netup_widget ..'">${eth0 up_kb}</span>', 5)
 -- }}}
 
--- {{{ Mail subject
-mailicon = widget({ type = "imagebox" })
-mailicon.image = image(beautiful.widget_mail)
+-- {{{ Mail widget
+gmailicon = widget({ type = "imagebox" })
+gmailicon.image = image(beautiful.widget_mail)
 -- Initialize widget
-mailwidget = widget({ type = "textbox" })
+gmailwidget = widget({ type = "textbox" })
 -- Register widget
---vicious.register(mailwidget, vicious.widgets.mbox, "$1", 181, {home .. "/mail/Inbox", 15})
+vicious.register(gmailwidget, vicious.widgets.gmail, "gmail (${count}) ${subject}", 37, 50)
 -- Register buttons
 --mailwidget:buttons(awful.util.table.join(
 --  awful.button({ }, 1, function () exec("urxvt -T Alpine -e alpine.exp") end)
@@ -192,6 +198,13 @@ volbar.widget:buttons(awful.util.table.join(
    awful.button({ }, 5, function () exec("amixer -q set PCM 2dB-", false) end)
 )) -- Register assigned buttons
 volwidget:buttons(volbar.widget:buttons())
+-- }}}
+
+-- {{{ MPD
+mpdicon = widget({ type = "imagebox" })
+mpdicon.image = image(beautiful.widget_music)
+mpdwidget = widget({ type = "textbox" })
+vicious.register(mpdwidget, vicious.widgets.mpd, "${state}, ${Artist}, ${Title}, ${Album}, ${Genre}", 7)
 -- }}}
 
 -- {{{ Date and time
@@ -309,16 +322,21 @@ for s = 1, scount do
     })
 
     wibox[s].widgets = {
-        separator, datewidget, dateicon,
-        separator, volwidget,  volbar.widget, volicon,
---        separator, mailwidget, mailicon,
-        separator, upicon,     netwidget, dnicon,
-        separator, fs.tmp.widget, fs.opt.widget, fs.var.widget, fs.usr.widget, fs.home.widget, fs.root.widget, fsicon,
-        separator, membar.widget, memicon,
---        separator, tzswidget, cpugraph.widget, cpuicon,
-        separator, cpugraph.widget, cpuicon,
-        separator,
-        layout = awful.widget.layout.horizontal.rightleft
+        {
+            separator, datewidget, dateicon,
+            separator, volwidget,  volbar.widget, volicon,
+            separator, upicon,     netwidget, dnicon,
+            separator, fs.tmp.widget, fs.opt.widget, fs.var.widget, fs.usr.widget, fs.home.widget, fs.root.widget, diowidget, fsicon,
+            separator, membar.widget, memicon,
+            separator, cpugraph.widget, loadwidget, cpuicon,
+            separator,
+            layout = awful.widget.layout.horizontal.rightleft
+        },
+        gmailicon, gmailwidget, separator,
+        mpdicon, mpdwidget, separator,
+        layout = awful.widget.layout.horizontal.leftright
+
+
     }
 end
 -- }}}
