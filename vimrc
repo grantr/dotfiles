@@ -1,12 +1,166 @@
-set nocompatible
-source $VIMRUNTIME/vimrc_example.vim
-behave xterm
+" based on http://github.com/jferris/config_files/blob/master/vimrc
 
+" Use Vim settings, rather then Vi settings (much better!).
+" This must be first, because it changes other options as a side effect.
+set nocompatible
+
+" allow backspacing over everything in insert mode
+set backspace=indent,eol,start
+
+set nobackup
+set nowritebackup
+set history=50		" keep 50 lines of command line history
+set ruler		" show the cursor position all the time
+set showcmd		" display incomplete commands
+set showmode    " show current mode
+set cmdheight=2
+set incsearch		" do incremental searching
+
+" Don't use Ex mode, use Q for formatting
+map Q gq
+
+" This is an alternative that also works in block mode, but the deleted
+" text is lost and it only works for putting the current register.
+"vnoremap p "_dp
+
+" Switch syntax highlighting on, when the terminal has colors
+" switch on highlighting the last used search pattern.
+" highlight matching braces
+" enable wildmenu
+if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
+  syntax on
+  set hlsearch
+  set showmatch
+  set matchtime=3
+  set wildmenu
+endif
+
+" Switch wrap off for everything
+set nowrap
+
+" Only do this part when compiled with support for autocommands.
+if has("autocmd")
+  " Enable file type detection.
+  " Use the default filetype settings, so that mail gets 'tw' set to 72,
+  " 'cindent' is on in C files, etc.
+  " Also load indent files, to automatically do language-dependent indenting.
+  filetype plugin indent on
+
+  " Set File type to 'text' for files ending in .txt
+  autocmd BufNewFile,BufRead *.txt setfiletype text
+
+  " Enable soft-wrapping for text files
+  autocmd FileType text,markdown,html,xhtml,eruby setlocal wrap linebreak nolist
+
+  " Put these in an autocmd group, so that we can delete them easily.
+  augroup vimrcEx
+  au!
+
+  " For all text files set 'textwidth' to 78 characters.
+  " autocmd FileType text setlocal textwidth=78
+
+  " When editing a file, always jump to the last known cursor position.
+  " Don't do it when the position is invalid or when inside an event handler
+  " (happens when dropping a file on gvim).
+  autocmd BufReadPost *
+    \ if line("'\"") > 0 && line("'\"") <= line("$") |
+    \   exe "normal g`\"" |
+    \ endif
+
+  " Automatically load .vimrc source when saved
+  autocmd BufWritePost .vimrc source $MYVIMRC
+
+  augroup END
+
+else
+
+  set autoindent		" always set autoindenting on
+
+endif " has("autocmd")
+
+" Softtabs, 2 spaces
+set softtabstop=2
+set tabstop=2
+set shiftwidth=2
+set expandtab
+set smarttab
+set smartindent
+
+" Always display the status line
+set laststatus=2
+
+" \ is the leader character
+let mapleader = ","
+
+" Hide search highlighting
+map <Leader>h :set invhls <CR>
+
+" Opens an edit command with the path of the currently edited file filled in
+" Normal mode: <Leader>e
+map <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
+
+" Opens a tab edit command with the path of the currently edited file filled in
+" Normal mode: <Leader>t
+map <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
+
+" Inserts the path of the currently edited file into a command
+" Command mode: Ctrl+P
+cmap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
+
+" Duplicate a selection
+" Visual mode: D
+vmap D y'>p
+
+" Press Shift+P while in visual mode to replace the selection without
+" overwriting the default register
+vmap P p :call setreg('"', getreg('0')) <CR>
+
+" No Help, please
+nmap <F1> <Esc>
+
+" Press ^F from insert mode to insert the current file name
+imap <C-F> <C-R>=expand("%")<CR>
+
+" Display extra whitespace
+" set list listchars=tab:»·,trail:·
+
+" Local config
+if filereadable(".vimrc.local")
+  source .vimrc.local
+endif
+
+" Use Ack instead of Grep when available
+if executable("ack")
+  set grepprg=ack\ -H\ --nogroup\ --nocolor\ --ignore-dir=tmp\ --ignore-dir=coverage
+endif
+
+" Color scheme
 if has("gui_running")
   colorscheme zenburn
 else
   colorscheme default
 end
+
+" Numbers
+set number
+"set numberwidth=5
+
+" Snippets are activated by Shift+Tab
+"let g:snippetsEmu_key = "<S-Tab>"
+
+" Tab completion options
+" (only complete to the longest unambiguous match, and show a menu)
+set completeopt=longest,menu
+set wildmode=list:longest,list:full
+set complete=.,t
+
+" case only matters with mixed case expressions
+set ignorecase
+set smartcase
+
+" Tags
+let g:Tlist_Ctags_Cmd="ctags --exclude='*.js'"
+set tags=./tags;
 
 " vim assumes you want to print cjk when encoding is utf-8
 set printencoding=posix
@@ -16,172 +170,32 @@ set spelllang=en_us
 map <F8> :set spell!<CR><Bar>:echo "Spell Check: " . strpart("OffOn", 3 * &spell, 3)<CR>
 set sps=best,10
 
-" set localleader to \
-"let maplocalleader="\\"
+" vundle
+set rtp+=~/.vim/bundle/vundle/ 
+call vundle#rc()
 
-" tab stuff
-" comment expandtab to use tabs instead of spaces
-set expandtab
-set smarttab
-set smartindent
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
+" Bundles
+Bundle 'tpope/vim-fugitive'
+Bundle 'Lokaltog/vim-easymotion'
+Bundle 'Command-T'
+Bundle 'tpope/vim-rails'
+Bundle 'tpope/vim-rake'
+Bundle 'tpope/vim-ragtag'
+Bundle 'tpope/vim-haml'
+Bundle 'tpope/vim-cucumber'
+Bundle 'tpope/vim-unimpaired'
+Bundle 'tpope/vim-git'
+Bundle 'tpope/vim-surround'
+Bundle 'tpope/vim-repeat'
+Bundle 'tpope/vim-abolish'
+Bundle 'ervandew/supertab'
+Bundle 'scrooloose/syntastic'
+Bundle 'scrooloose/nerdtree'
+Bundle 'scrooloose/nerdcommenter'
+Bundle 'msanders/snipmate.vim'
+Bundle 'godlygeek/tabular'
+Bundle 'Rename'
 
-" random settings from kent 
-set cmdheight=2
-set winaltkeys=no
-set backspace=2 whichwrap+=<,>,[,]
-
-" minibufexpl
-let loaded_minibufexplorer = 1 " to stop mbe loading
-let g:miniBufExplMapWindowNavVim = 1
-let g:miniBufExplMapWindowNavArrows = 1
-let g:miniBufExplMapCTabSwitchBufs = 1
-let g:miniBufExplModSelTarget = 1
-
-" yankring
-"noremap <F5> :YRShow<CR>
-
-" lookupfile
-let g:LookupFile_TagExpr = '"./filenametags"'
-
-" taglist
-noremap <F6> :TlistToggle<CR>
-let g:Tlist_Use_Right_Window = 1
-let g:Tlist_Exit_OnlyWindow = 1
-let g:Tlist_File_Fold_Auto_Close = 1
-let g:Tlist_Max_Submenu_Items = 20
-
-" remap NERD comments leader
-"let NERD_mapleader = '\n'
-
-" rjs files are ruby
-au BufNewFile,BufRead *.rjs    setf ruby
-
-" enable rubycomplete
-autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
-
-" Filetype detection on
-filetype on
-" Filetype plugin on
-filetype plugin on
-" Syntax highlighting on
-syntax on
-" Show line number
-set number
-" Show command
-set showcmd
-" Show current mode
-set showmode
-" Show ruler in status line
-set ruler
-" Wrap lines at line break
-set wrap
-set linebreak
-let &breakat = ' 	'
-" Show status line for all files
-set laststatus=2
-" Enable autoindent
-set autoindent
-" Enable filetype indent
-filetype indent on
-" Ignore case on pure lower case search patterns
-set ignorecase
-set smartcase
-" Increment search as you type search pattern
-set incsearch
-" Highlight search patterns
-set hlsearch
-" Show matching brackets
-set showmatch
-set matchtime=3
-" Add $TEMP directory to swap file directory list
-if exists('$TEMP')
-  let &directory = &directory . ',' . $TEMP
-endif
-set wildmenu
-
-"
-" genutils
-"
-
-" The :find command is very useful to search for a file in path, but it
-"   doesn't support file completion. Add the following command in your vimrc
-"     to add this functionality
-command! -nargs=1 -bang -complete=custom,<SID>PathComplete FindInPath
-            \ :find<bang> <args>
-function! s:PathComplete(ArgLead, CmdLine, CursorPos)
-    return UserFileComplete(a:ArgLead, a:CmdLine, a:CursorPos, 1, &path)
-endfunction
-
-" If you are running commands that generate multiple pages of output, you
-"   might find it useful to redirect the output to a new buffer. Put the
-"     following command in your vimrc
-"command! -nargs=* -complete=command Redir
-"          \ :new | put! =GetVimCmdOutput('<args>') | setl bufhidden=wipe |
-"          \ setl nomodified
-
-" rails.vim
-"
-" url command
-:command -bar -nargs=1 OpenURL :!firefox <args>
-
-" rails_level
-let g:rails_level = 4
-
-" rubycomplete
-autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
-autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
-autocmd FileType ruby,eruby let g:rubycomplete_rails = 0
-autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
-
-"
-" project.vim
-"
-" flags, see help proj_flags for explanation
-let g:proj_flags="imstgL"
-
-" surround
-""autocmd FileType ruby,eruby let b:surround_35 = "#{\r}"  " adds #{ } surround
-
-" always go to top of git commit
-autocmd BufRead COMMIT_EDITMSG :0
-
-" fugitive
-" how to preserve existing status line and append this to end?
-" set statusline=%{fugitive#statusline()}%#StatusLine#
-
-
-" from adam-vim
-
-" don't expand tabs where they are significant
-autocmd FileType make set noexpandtab
-autocmd FileType python set noexpandtab
-
-let g:fuzzy_ignore = "*.log"
-let g:fuzzy_matching_limit = 70
-
-let mapleader=","
- 
-let Tlist_GainFocus_On_ToggleOpen=1
-let Tlist_Process_File_Always=1
-let Tlist_Show_Menu=1
-let Tlist_Enable_Fold_Column=0
-let g:gist_detect_filetype = 1
-
-set grepprg=ack
-set grepformat=%f:%l:%m
-
-map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
-map <leader>l :TlistToggle<CR>
-
-set backupdir=~/.vimswaps,/tmp
-
-if has("vms")
-  set nobackup " do not keep a backup file, use versions instead
-else
-  set backup " keep a backup file
-endif
-
+" TODO figure out why after/plugin files dont work
+let g:EasyMotion_leader_key = '<Leader>m' 
 let g:CommandTMaxHeight=15
