@@ -3,6 +3,7 @@
 . ~/.bash/windowtitle
 . ~/.bash/config
 . ~/.bash/prompt
+. ~/.bash/keychain
 . ~/.env/all
 
 # use .localrc for settings specific to one system
