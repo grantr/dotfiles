@@ -191,10 +191,10 @@ Bundle 'tpope/vim-abolish'
 Bundle 'ervandew/supertab'
 Bundle 'scrooloose/syntastic'
 Bundle 'scrooloose/nerdtree'
-Bundle 'scrooloose/nerdcommenter'
 Bundle 'msanders/snipmate.vim'
 Bundle 'godlygeek/tabular'
 Bundle 'Rename'
+Bundle 'tomtom/tcomment_vim'
 
 " TODO figure out why after/plugin files dont work
 let g:EasyMotion_leader_key = '<Leader>m' 
