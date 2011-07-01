@@ -173,6 +173,7 @@ set sps=best,10
 " vundle
 set rtp+=~/.vim/bundle/vundle/ 
 call vundle#rc()
+Bundle 'gmarik/vundle'
 
 " Bundles
 Bundle 'tpope/vim-fugitive'
