@@ -200,3 +200,6 @@ Bundle 'tomtom/tcomment_vim'
 " TODO figure out why after/plugin files dont work
 let g:EasyMotion_leader_key = '<Leader>m' 
 let g:CommandTMaxHeight=15
+
+" TODO add this to tpope/vim-git
+autocmd BufRead COMMIT_EDITMSG :0
