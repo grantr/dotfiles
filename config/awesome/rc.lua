@@ -86,7 +86,7 @@ vicious.register(cpugraph,  vicious.widgets.cpu, "$1")
 
 -- {{{ Load average
 loadwidget = widget({ type = "textbox" })
-vicious.register(loadwidget, vicious.widgets.uptime, "$4 $5 $6", 3)
+vicious.register(loadwidget, vicious.widgets.uptime, "$4 $5 $6 ", 3)
 -- }}}
 
 
@@ -145,7 +145,7 @@ vicious.register(fs.tmp,  vicious.widgets.fs, "${/tmp used_p}", 599)
 
 -- {{{ Disk I/O
 diowidget = widget({ type = "textbox" })
-vicious.register(diowidget, vicious.widgets.dio, "R:${sda read_mb} W:${sda write_mb}", 3)
+vicious.register(diowidget, vicious.widgets.dio, "R:${sda read_mb} W:${sda write_mb} ", 3)
 -- }}}
 
 -- {{{ Network usage
