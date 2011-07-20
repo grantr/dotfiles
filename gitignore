@@ -1,9 +1,7 @@
 *.log 
 *.html-gzip-* 
 .DS_Store 
-*.swp
-*.swo
-*.swn
+*.sw[a-z]
 Session.vim 
 tags 
 uuid.state
