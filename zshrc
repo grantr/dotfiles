@@ -29,5 +29,8 @@ source $ZSH/oh-my-zsh.sh
 . ~/.zsh/keychain
 . ~/.env/all
 
+# bind special keys according to readline configuration
+eval "$(sed -n 's/^/bindkey /; s/: / /p' /etc/inputrc)" >/dev/null
+
 # use .localrc for settings specific to one system
 [[ -f ~/.localrc ]] && . ~/.localrc
