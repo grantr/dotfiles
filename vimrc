@@ -35,8 +35,8 @@ if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
   set wildmenu
 endif
 
-" Switch wrap off for everything
-set nowrap
+" wrap by default
+set wrap
 
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
