@@ -13,6 +13,9 @@ require("vicious")
 -- Calendar
 require("cal")
 
+-- Rodentbane
+require("rodentbane")
+
 -- {{{ Variable definitions
 
 -- This is used later as the default terminal and editor to run.
@@ -352,7 +355,12 @@ root.buttons(awful.util.table.join(
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
     -- {{{ Applications
-    awful.key({ modkey,           }, "w", function () exec("chromium") end),
+    awful.key({ modkey,           }, "w", function () exec("chromium --enable-extension-timeline-api") end),
+    -- }}}
+
+    -- {{{ Rodentbane
+    awful.key({ modkey,           }, "d", function () rodentbane.start() end),
+    awful.key({ modkey, "Control" }, "d", function () rodentbane.start(mouse.screen, true) end),
     -- }}}
 
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ),
