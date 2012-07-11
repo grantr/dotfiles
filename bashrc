@@ -10,3 +10,6 @@
 if [ -f ~/.localrc ]; then
   . ~/.localrc
 fi
+
+# Added by autojump install.sh
+source /etc/profile.d/autojump.bash
