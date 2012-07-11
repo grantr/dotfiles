@@ -53,7 +53,7 @@ layouts =
 -- {{{ Tags
 
 tags = {
-    names  = { "dev", "work", "sys", "mail", "web", "im", 7, 8, 9 }
+    names  = { "dev", "work", "sys", "mail", "web", "im", "music", 8, 9 }
 }
 -- Define a tag table which hold all screen tags.
 for s = 1, scount do
