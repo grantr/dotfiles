@@ -1,2 +1,5 @@
 clear lock
 keysym Caps_Lock = Super_L Caps_Lock
+keysym Muhenkan = Super_L Muhenkan
+keysym Henkan_Mode = Super_L Henkan_Mode
+keysym Escape = Escape asciitilde
