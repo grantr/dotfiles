@@ -21,16 +21,30 @@ export ZSH_THEME="grantr"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git git-prompt)
+plugins=(git-prompt)
 
+export DISABLE_AUTO_UPDATE=true
 source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
 . ~/.zsh/keychain
+. ~/.zsh/aliases
 . ~/.env/all
+
+# disable autocorrect for certain commands
+if [ -f ~/.zsh_nocorrect ]; then
+    while read -r COMMAND; do
+        alias $COMMAND="nocorrect $COMMAND"
+    done < ~/.zsh_nocorrect
+fi
 
 # bind special keys according to readline configuration
 eval "$(sed -n 's/^/bindkey /; s/: / /p' /etc/inputrc)" >/dev/null
+
+# use bash-style history search
+bindkey "^[[5~" history-beginning-search-backward
+bindkey "^[[6~" history-beginning-search-forward
+
 
 # use .localrc for settings specific to one system
 [[ -f ~/.localrc ]] && . ~/.localrc
