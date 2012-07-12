@@ -190,6 +190,7 @@ Bundle 'tpope/vim-git'
 Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-abolish'
+Bundle 'tpope/vim-eunuch'
 Bundle 'ervandew/supertab'
 Bundle 'scrooloose/syntastic'
 Bundle 'scrooloose/nerdtree'
@@ -197,6 +198,18 @@ Bundle 'msanders/snipmate.vim'
 Bundle 'godlygeek/tabular'
 Bundle 'Rename'
 Bundle 'tomtom/tcomment_vim'
+Bundle 'Neurogami/mirah-vim'
+Bundle 'tsaleh/vim-matchit'
+Bundle 'vim-ruby/vim-ruby'
+Bundle 'textobj-user'
+Bundle 'textobj-rubyblock'
+Bundle 'aaronbieber/quicktask'
+Bundle 'wikilink'
+Bundle 'skalnik/vim-vroom'
+
+"Bundle 'vimwiki'
+" add map to open wiki home page
+nmap <Leader>ww :e ~/wiki/Home.md<CR>
 
 " TODO figure out why after/plugin files dont work
 let g:EasyMotion_leader_key = '<Leader>m' 
