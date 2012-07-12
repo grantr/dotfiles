@@ -44,6 +44,9 @@ if has("autocmd")
 
   " Set File type to 'text' for files ending in .txt
   autocmd BufNewFile,BufRead *.txt setfiletype text
+  autocmd BufNewFile,BufRead *.mirah setfiletype mirah
+  autocmd BufNewFile,BufRead *.rabl setfiletype ruby
+  autocmd BufNewFile,BufRead *.jsonify setfiletype ruby
 
   " Enable soft-wrapping for text files
   autocmd FileType text,markdown,html,xhtml,eruby setlocal wrap linebreak nolist
