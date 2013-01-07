@@ -4,6 +4,52 @@
 " This must be first, because it changes other options as a side effect.
 set nocompatible
 
+
+"" Vundle
+
+filetype off " required by vundle
+
+" vundle
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+Bundle 'gmarik/vundle'
+
+" Bundles
+Bundle 'tpope/vim-fugitive'
+Bundle 'Lokaltog/vim-easymotion'
+Bundle 'Command-T'
+Bundle 'tpope/vim-rails'
+Bundle 'tpope/vim-rake'
+Bundle 'tpope/vim-ragtag'
+Bundle 'tpope/vim-haml'
+Bundle 'tpope/vim-cucumber'
+Bundle 'tpope/vim-unimpaired'
+Bundle 'tpope/vim-git'
+Bundle 'tpope/vim-surround'
+Bundle 'tpope/vim-repeat'
+Bundle 'tpope/vim-abolish'
+Bundle 'tpope/vim-eunuch'
+Bundle 'tpope/vim-markdown'
+Bundle 'ervandew/supertab'
+Bundle 'scrooloose/syntastic'
+Bundle 'scrooloose/nerdtree'
+Bundle 'msanders/snipmate.vim'
+Bundle 'godlygeek/tabular'
+Bundle 'Rename'
+Bundle 'tomtom/tcomment_vim'
+Bundle 'matchit.zip'
+Bundle 'vim-ruby/vim-ruby'
+Bundle 'textobj-user'
+Bundle 'textobj-rubyblock'
+Bundle 'aaronbieber/quicktask'
+Bundle 'wikilink'
+Bundle 'skalnik/vim-vroom'
+
+"Bundle 'vimwiki'
+filetype plugin indent on
+
+"" end Vundle
+
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
@@ -174,42 +220,6 @@ set spelllang=en_us
 map <F8> :set spell!<CR><Bar>:echo "Spell Check: " . strpart("OffOn", 3 * &spell, 3)<CR>
 set sps=best,10
 
-" vundle
-set rtp+=~/.vim/bundle/vundle/ 
-call vundle#rc()
-Bundle 'gmarik/vundle'
-
-" Bundles
-Bundle 'tpope/vim-fugitive'
-Bundle 'Lokaltog/vim-easymotion'
-Bundle 'Command-T'
-Bundle 'tpope/vim-rails'
-Bundle 'tpope/vim-rake'
-Bundle 'tpope/vim-ragtag'
-Bundle 'tpope/vim-haml'
-Bundle 'tpope/vim-cucumber'
-Bundle 'tpope/vim-unimpaired'
-Bundle 'tpope/vim-git'
-Bundle 'tpope/vim-surround'
-Bundle 'tpope/vim-repeat'
-Bundle 'tpope/vim-abolish'
-Bundle 'tpope/vim-eunuch'
-Bundle 'ervandew/supertab'
-Bundle 'scrooloose/syntastic'
-Bundle 'scrooloose/nerdtree'
-Bundle 'msanders/snipmate.vim'
-Bundle 'godlygeek/tabular'
-Bundle 'Rename'
-Bundle 'tomtom/tcomment_vim'
-Bundle 'vim-ruby/vim-ruby'
-Bundle 'matchit.zip'
-Bundle 'textobj-user'
-Bundle 'textobj-rubyblock'
-Bundle 'aaronbieber/quicktask'
-Bundle 'wikilink'
-Bundle 'skalnik/vim-vroom'
-
-"Bundle 'vimwiki'
 " add map to open wiki home page
 nmap <Leader>ww :e ~/wiki/Home.md<CR>
 
