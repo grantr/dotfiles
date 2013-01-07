@@ -1,3 +1,7 @@
+" based on http://github.com/jferris/config_files/blob/master/vimrc
+
+" Use Vim settings, rather then Vi settings (much better!).
+" This must be first, because it changes other options as a side effect.
 set nocompatible
 
 " allow backspacing over everything in insert mode
@@ -88,7 +92,6 @@ set smartindent
 " Always display the status line
 set laststatus=2
 
-set mouse=a
 
 " \ is the leader character
 let mapleader = ","
@@ -124,6 +127,9 @@ imap <C-F> <C-R>=expand("%")<CR>
 
 " Display extra whitespace
 " set list listchars=tab:»·,trail:·
+
+" enable mouse support everywhere
+set mouse=a
 
 " Local config
 if filereadable(".vimrc.local")
