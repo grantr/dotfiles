@@ -48,9 +48,11 @@ if has("autocmd")
 
   " Set File type to 'text' for files ending in .txt
   autocmd BufNewFile,BufRead *.txt setfiletype text
-  autocmd BufNewFile,BufRead *.mirah setfiletype mirah
-  autocmd BufNewFile,BufRead *.rabl setfiletype ruby
-  autocmd BufNewFile,BufRead *.jsonify setfiletype ruby
+
+  " TODO add this to tpope/vim-git
+  autocmd BufRead COMMIT_EDITMSG :0
+
+  au BufRead,BufNewFile *.go set filetype=go
 
   " Enable soft-wrapping for text files
   autocmd FileType text,markdown,html,xhtml,eruby setlocal wrap linebreak nolist
@@ -220,6 +222,3 @@ nmap <Leader>ww :e ~/wiki/Home.md<CR>
 " TODO figure out why after/plugin files dont work
 let g:EasyMotion_leader_key = '<Leader>m' 
 let g:CommandTMaxHeight=15
-
-" TODO add this to tpope/vim-git
-autocmd BufRead COMMIT_EDITMSG :0
