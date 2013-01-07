@@ -3,5 +3,5 @@ URxvt.tintColor: gray
 URxvt.shading: 40
 Rxvt.foreground: gray
 Rxvt.background: black
-URxvt.font: xft:Bitstream Vera Sans Mono:pixelsize=12
+URxvt.font: xft:Dejavu Sans Mono:pixelsize=12
 URxvt.termName: rxvt

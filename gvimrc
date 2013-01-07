@@ -11,5 +11,5 @@ set lines=999
 set columns=999
 
 " Set font
-set guifont=Bitstream\ Vera\ Sans\ Mono\ 9
+set guifont=Dejavu\ Sans\ Mono\ 9
 
