@@ -1,5 +1,13 @@
 clear lock
+
+! for non-hhkb (map capslock to windows key/mod4, swap escape and grave/tilde)
 keysym Caps_Lock = Super_L Caps_Lock
+keysym grave = Escape asciitilde
+keysym Escape = grave asciitilde
+
+! for hhkb (map diamond key to windows key/mod4)
 keysym Muhenkan = Super_L Muhenkan
 keysym Henkan_Mode = Super_L Henkan_Mode
-keysym Escape = Escape asciitilde
+
+! for hhkb (map shift-esc to tilde)
+! keysym Escape = Escape asciitilde
