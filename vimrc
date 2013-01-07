@@ -1,3 +1,7 @@
+" based on http://github.com/jferris/config_files/blob/master/vimrc
+
+" Use Vim settings, rather then Vi settings (much better!).
+" This must be first, because it changes other options as a side effect.
 set nocompatible
 
 " allow backspacing over everything in insert mode
@@ -44,9 +48,11 @@ if has("autocmd")
 
   " Set File type to 'text' for files ending in .txt
   autocmd BufNewFile,BufRead *.txt setfiletype text
-  autocmd BufNewFile,BufRead *.mirah setfiletype mirah
-  autocmd BufNewFile,BufRead *.rabl setfiletype ruby
-  autocmd BufNewFile,BufRead *.jsonify setfiletype ruby
+
+  " TODO add this to tpope/vim-git
+  autocmd BufRead COMMIT_EDITMSG :0
+
+  au BufRead,BufNewFile *.go set filetype=go
 
   " Enable soft-wrapping for text files
   autocmd FileType text,markdown,html,xhtml,eruby setlocal wrap linebreak nolist
@@ -88,7 +94,6 @@ set smartindent
 " Always display the status line
 set laststatus=2
 
-set mouse=a
 
 " \ is the leader character
 let mapleader = ","
@@ -124,6 +129,9 @@ imap <C-F> <C-R>=expand("%")<CR>
 
 " Display extra whitespace
 " set list listchars=tab:»·,trail:·
+
+" enable mouse support everywhere
+set mouse=a
 
 " Local config
 if filereadable(".vimrc.local")
@@ -198,9 +206,8 @@ Bundle 'msanders/snipmate.vim'
 Bundle 'godlygeek/tabular'
 Bundle 'Rename'
 Bundle 'tomtom/tcomment_vim'
-Bundle 'Neurogami/mirah-vim'
-Bundle 'tsaleh/vim-matchit'
 Bundle 'vim-ruby/vim-ruby'
+Bundle 'matchit.zip'
 Bundle 'textobj-user'
 Bundle 'textobj-rubyblock'
 Bundle 'aaronbieber/quicktask'
@@ -214,6 +221,3 @@ nmap <Leader>ww :e ~/wiki/Home.md<CR>
 " TODO figure out why after/plugin files dont work
 let g:EasyMotion_leader_key = '<Leader>m' 
 let g:CommandTMaxHeight=15
-
-" TODO add this to tpope/vim-git
-autocmd BufRead COMMIT_EDITMSG :0
