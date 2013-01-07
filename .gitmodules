@@ -4,6 +4,3 @@
 [submodule "config/awesome/vicious"]
 	path = config/awesome/vicious
 	url = http://git.sysphere.org/vicious
-[submodule "oh-my-zsh"]
-	path = oh-my-zsh
-	url = git://github.com/grantr/oh-my-zsh
