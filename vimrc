@@ -46,13 +46,8 @@ if has("autocmd")
   " Also load indent files, to automatically do language-dependent indenting.
   filetype plugin indent on
 
-  " Set File type to 'text' for files ending in .txt
-  autocmd BufNewFile,BufRead *.txt setfiletype text
-
   " TODO add this to tpope/vim-git
   autocmd BufRead COMMIT_EDITMSG :0
-
-  au BufRead,BufNewFile *.go set filetype=go
 
   " Enable soft-wrapping for text files
   autocmd FileType text,markdown,html,xhtml,eruby setlocal wrap linebreak nolist
