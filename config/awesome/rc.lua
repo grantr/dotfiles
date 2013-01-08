@@ -113,12 +113,7 @@ fsicon = widget({ type = "imagebox" })
 fsicon.image = image(beautiful.widget_fs)
 -- Initialize widgets
 fs = {
-  root = awful.widget.progressbar(),
-  home = awful.widget.progressbar(),
-  usr  = awful.widget.progressbar(),
-  var  = awful.widget.progressbar(),
-  opt  = awful.widget.progressbar(),
-  tmp  = awful.widget.progressbar()
+  root = awful.widget.progressbar()
 }
 -- Progressbar properties
 for path, w in pairs(fs) do
@@ -139,11 +134,6 @@ end -- Enable caching
 vicious.cache(vicious.widgets.fs)
 -- Register widgets
 vicious.register(fs.root, vicious.widgets.fs, "${/ used_p}", 599)
-vicious.register(fs.home, vicious.widgets.fs, "${/home used_p}", 599)
-vicious.register(fs.usr,  vicious.widgets.fs, "${/usr used_p}", 599)
-vicious.register(fs.var,  vicious.widgets.fs, "${/var used_p}", 599)
-vicious.register(fs.opt,  vicious.widgets.fs, "${/opt used_p}", 599)
-vicious.register(fs.tmp,  vicious.widgets.fs, "${/tmp used_p}", 599)
 -- }}}
 
 -- {{{ Disk I/O
@@ -329,7 +319,7 @@ for s = 1, scount do
             separator, datewidget, dateicon,
             separator, volwidget,  volbar.widget, volicon,
             separator, upicon,     netwidget, dnicon,
-            separator, fs.tmp.widget, fs.opt.widget, fs.var.widget, fs.usr.widget, fs.home.widget, fs.root.widget, diowidget, fsicon,
+            separator, fs.root.widget, diowidget, fsicon,
             separator, membar.widget, memicon,
             separator, cpugraph.widget, loadwidget, cpuicon,
             separator,
