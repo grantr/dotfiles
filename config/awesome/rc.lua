@@ -356,7 +356,7 @@ for s = 1, scount do
             separator, batwidget, batbar.widget, baticon,
             separator, volwidget,  volbar.widget, volicon,
             separator, wifibar.widget, wifiwidget, wifiicon,
-            separator, systray,
+            separator,
             layout = awful.widget.layout.horizontal.rightleft
         },
         cpuicon, loadwidget, cpugraph.widget, freqwidget, separator,
