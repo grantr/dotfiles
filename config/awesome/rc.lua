@@ -92,6 +92,11 @@ loadwidget = widget({ type = "textbox" })
 vicious.register(loadwidget, vicious.widgets.uptime, "$4 $5 $6 ", 3)
 -- }}}
 
+-- {{{ cpufreq
+freqwidget = widget({ type = "textbox" })
+vicious.register(freqwidget, vicious.widgets.cpufreq, "$5", 37, "cpu0")
+-- }}}
+
 
 -- {{{ Memory usage
 memicon = widget({ type = "imagebox" })
@@ -228,6 +233,20 @@ vicious.register(batwidget, vicious.widgets.bat, " $1 $2% $3", 7, "BAT1")
 
 -- }}}
 
+-- {{{ Wifi state
+wifiicon = widget({ type = "imagebox" })
+wifiicon.image = image(beautiful.widget_wifi)
+wifiwidget = widget({ type = "textbox" })
+wifibar = awful.widget.progressbar()
+wifibar:set_vertical(true)
+wifibar:set_height(16):set_width(8)
+wifibar:set_background_color(beautiful.fg_off_widget)
+wifibar:set_color(beautiful.fg_widget)
+vicious.cache(vicious.widgets.wifi)
+vicious.register(wifiwidget, vicious.widgets.wifi, "${ssid} ${rate}Mb ", 29, "wlan0")
+vicious.register(wifibar,    vicious.widgets.wifi, "${linp}", 29, "wlan0")
+-- }}}
+
 -- {{{ System tray
 systray = widget({ type = "systray" })
 -- }}} 
@@ -334,15 +353,17 @@ for s = 1, scount do
     wibox[s].widgets = {
         {
             separator, datewidget, dateicon,
+            separator, batwidget, batbar.widget, baticon,
             separator, volwidget,  volbar.widget, volicon,
-            separator, upicon,     netwidget, dnicon,
-            separator, fs.root.widget, diowidget, fsicon,
-            separator, membar.widget, memicon,
-            separator, cpugraph.widget, loadwidget, cpuicon,
-            separator,
+            separator, wifibar.widget, wifiwidget, wifiicon,
+            separator, systray,
             layout = awful.widget.layout.horizontal.rightleft
         },
-        baticon, batbar.widget, batwidget, separator,
+        cpuicon, loadwidget, cpugraph.widget, freqwidget, separator,
+        upicon, netwidget, dnicon, separator,
+        fsicon, fs.root.widget, separator,
+        memicon, membar.widget, separator,
+        
         -- gmailicon, gmailwidget, separator,
         -- mpdicon, mpdwidget, separator,
         layout = awful.widget.layout.horizontal.leftright
