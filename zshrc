@@ -4,7 +4,7 @@ export DISABLE_AUTO_UPDATE="true"
 # export DISABLE_LS_COLORS="true"
 # export DISABLE_AUTO_TITLE="true"
 
-plugins=(autojump git-prompt)
+plugins=(autojump vcs-prompt)
 
 source $ZSH/oh-my-zsh.sh
 
