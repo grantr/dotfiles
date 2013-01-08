@@ -16,11 +16,11 @@ source $ZSH/oh-my-zsh.sh
 unsetopt correct_all
 
 # disable autocorrect for certain commands
-if [ -f ~/.zsh_nocorrect ]; then
-    while read -r COMMAND; do
-        alias $COMMAND="nocorrect $COMMAND"
-    done < ~/.zsh_nocorrect
-fi
+# if [ -f ~/.zsh_nocorrect ]; then
+#     while read -r COMMAND; do
+#         alias $COMMAND="nocorrect $COMMAND"
+#     done < ~/.zsh_nocorrect
+# fi
 
 # bind special keys according to readline configuration
 eval "$(sed -n 's/^/bindkey /; s/: / /p' /etc/inputrc)" >/dev/null
