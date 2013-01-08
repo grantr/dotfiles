@@ -211,6 +211,23 @@ vicious.register(datewidget, vicious.widgets.date, "%b %d, %R", 61)
 cal.register(datewidget, "<span color='#CC9393'><b>%s</b></span>")
 -- }}}
 
+-- {{{ Battery level
+baticon = widget({ type = "imagebox" })
+baticon.image = image(beautiful.widget_bat)
+batbar = awful.widget.progressbar()
+batwidget = widget({ type = "textbox" })
+batbar:set_vertical(true)
+batbar:set_height(16):set_width(12):set_ticks_size(2)
+batbar:set_background_color(beautiful.fg_off_widget)
+batbar:set_gradient_colors({ beautiful.fg_end_widget,
+   beautiful.fg_center_widget, beautiful.fg_widget
+})
+vicious.cache(vicious.widgets.bat)
+vicious.register(batbar,    vicious.widgets.bat, "$2", 7, "BAT1")
+vicious.register(batwidget, vicious.widgets.bat, " $1 $2% $3", 7, "BAT1")
+
+-- }}}
+
 -- {{{ System tray
 systray = widget({ type = "systray" })
 -- }}} 
@@ -325,8 +342,9 @@ for s = 1, scount do
             separator,
             layout = awful.widget.layout.horizontal.rightleft
         },
-        gmailicon, gmailwidget, separator,
-        mpdicon, mpdwidget, separator,
+        baticon, batbar.widget, batwidget, separator,
+        -- gmailicon, gmailwidget, separator,
+        -- mpdicon, mpdwidget, separator,
         layout = awful.widget.layout.horizontal.leftright
 
 
