@@ -26,4 +26,4 @@
 [rerere]
   enabled = 1
 [push]
-  default = tracking
+  default = current
