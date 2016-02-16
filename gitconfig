@@ -1,29 +1,52 @@
+
 [user]
-	name = Grant Rodgers
-	email = grantr@gmail.com
+name = Grant Rodgers
+email = grantr@gmail.com
+
 [github]
-	user = grantr
-	token = 
-[alias]
-	co = checkout
-	st = status
-[color]
-	diff = auto
-	status = auto
-  branch = auto
-  ui = auto
-  interactive = auto
+user = grantr
+token =
+
+[hub]
+protocol = https
+
+[credential]
+helper = osxkeychain
+
 [core]
-  excludesfile = ~/.gitignore
-[merge]
-  conflictstyle = diff3
-[apply]
-  whitespace = nowarn
-[branch]
-  autosetupmerge = true
-[diff "ruby"]
-	funcname = ^ *\\(\\(class\\|module\\|def\\) .*\\)
+excludesfile = ~/.gitignore
+
 [rerere]
-  enabled = 1
+enabled = 1
+
+[apply]
+whitespace = nowarn
+
+[color]
+ui = auto
+
 [push]
-  default = current
+default = current
+
+[branch]
+autosetupmerge = true
+
+[alias]
+co = checkout
+st = status
+ci = commit
+rbo = rebase -i @{u}
+
+[merge]
+conflictstyle = diff3
+
+[fetch]
+prune = true
+
+[filter "lfs"]
+clean = git-lfs clean %f
+smudge = git-lfs smudge %f
+required = true
+
+[diff "ruby"]
+funcname = ^ *\\(\\(class\\|module\\|def\\) .*\\)
