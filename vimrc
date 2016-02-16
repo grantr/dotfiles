@@ -10,45 +10,48 @@ set nocompatible
 filetype off " required by vundle
 
 " vundle
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-Bundle 'gmarik/vundle'
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
 
-" Bundles
-Bundle 'tpope/vim-fugitive'
-Bundle 'Lokaltog/vim-easymotion'
-Bundle 'Command-T'
-Bundle 'tpope/vim-rails'
-Bundle 'tpope/vim-rake'
-Bundle 'tpope/vim-ragtag'
-Bundle 'tpope/vim-haml'
-Bundle 'tpope/vim-cucumber'
-Bundle 'tpope/vim-unimpaired'
-Bundle 'tpope/vim-git'
-Bundle 'tpope/vim-surround'
-Bundle 'tpope/vim-repeat'
-Bundle 'tpope/vim-abolish'
-Bundle 'tpope/vim-eunuch'
-Bundle 'tpope/vim-markdown'
-Bundle 'ervandew/supertab'
-Bundle 'scrooloose/syntastic'
-Bundle 'scrooloose/nerdtree'
-Bundle 'msanders/snipmate.vim'
-Bundle 'godlygeek/tabular'
-Bundle 'Rename'
-Bundle 'tomtom/tcomment_vim'
-Bundle 'matchit.zip'
-Bundle 'vim-ruby/vim-ruby'
-Bundle 'textobj-user'
-Bundle 'textobj-rubyblock'
-Bundle 'aaronbieber/quicktask'
-Bundle 'wikilink'
-Bundle 'skalnik/vim-vroom'
+" Plugins
+Plugin 'tpope/vim-fugitive'
+Plugin 'Lokaltog/vim-easymotion'
+Plugin 'Command-T'
+Plugin 'tpope/vim-rails'
+Plugin 'tpope/vim-rake'
+Plugin 'tpope/vim-ragtag'
+Plugin 'tpope/vim-haml'
+Plugin 'tpope/vim-cucumber'
+Plugin 'tpope/vim-unimpaired'
+Plugin 'tpope/vim-git'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-abolish'
+Plugin 'tpope/vim-eunuch'
+Plugin 'tpope/vim-markdown'
+Plugin 'ervandew/supertab'
+"doesn't work with fish
+"Plugin 'scrooloose/syntastic'
+Plugin 'scrooloose/nerdtree'
+Plugin 'msanders/snipmate.vim'
+Plugin 'godlygeek/tabular'
+Plugin 'Rename'
+Plugin 'tomtom/tcomment_vim'
+Plugin 'matchit.zip'
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'textobj-user'
+Plugin 'textobj-rubyblock'
+Plugin 'aaronbieber/quicktask'
+Plugin 'wikilink'
+Plugin 'skalnik/vim-vroom'
 
-"Bundle 'vimwiki'
-filetype plugin indent on
+"Plugin 'vimwiki'
 
 "" end Vundle
+call vundle#end()
+filetype plugin indent on
+
 
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
