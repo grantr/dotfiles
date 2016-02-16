@@ -56,6 +56,10 @@ def link_file(file)
 #  elsif file =~ /zshrc$/ # copy zshrc instead of link
 #    puts "copying ~/.#{file}"
 #    system %Q{cp "$PWD/#{file}" "$HOME/.#{file}"}
+  # Files that don't need dots
+  elsif file =~ /^Brewfile$/
+    puts "linking ~/#{file}"
+    system %Q{ln -s "$PWD/#{file}" "$HOME/#{file}"}
   else
     puts "linking ~/.#{file}"
     system %Q{ln -s "$PWD/#{file}" "$HOME/.#{file}"}
