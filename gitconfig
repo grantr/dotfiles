@@ -15,6 +15,7 @@ helper = osxkeychain
 
 [core]
 excludesfile = ~/.gitignore
+editor = vim
 
 [rerere]
 enabled = 1
