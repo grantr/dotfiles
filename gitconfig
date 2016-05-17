@@ -4,7 +4,7 @@ name = Grant Rodgers
 email = grantr@gmail.com
 
 [github]
-user = grantr
+	user = grantr
 token =
 
 [hub]
