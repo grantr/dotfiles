@@ -11,6 +11,7 @@ cask 'vagrant'
 cask 'atom'
 cask 'dropbox'
 cask '1password'
+cask 'iterm2'
 
 brew 'jq'
 brew 'the_silver_searcher'
