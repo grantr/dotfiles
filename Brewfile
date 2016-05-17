@@ -9,6 +9,8 @@ tap 'grpc/grpc'
 cask 'java'
 cask 'vagrant'
 cask 'atom'
+cask 'dropbox'
+cask '1password'
 
 brew 'jq'
 brew 'the_silver_searcher'
